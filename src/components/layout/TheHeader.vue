@@ -23,6 +23,11 @@ const items = ref([
     label: 'Add Quiz',
     icon: 'pi pi-plus-circle',
     link: '/about'
+  },
+  {
+    label: 'Quiz Types',
+    icon: 'pi pi-book',
+    link: '/quiz-types'
   }
 ]);
 </script>
