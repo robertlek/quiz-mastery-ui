@@ -22,6 +22,11 @@ const router = createRouter({
       path: '/quiz-types',
       name: 'quiz types',
       component: () => import('@/views/QuizType/QuizTypesView.vue')
+    },
+    {
+      path: '/manage-quizzes',
+      name: 'Manage Quizzes',
+      component: () => import('@/views/Quiz/ManageQuizzes.vue')
     }
   ]
 });

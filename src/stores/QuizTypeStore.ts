@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import type IQuizType from '@/interfaces/IQuizType';
 
 export const useQuizTypeStore = defineStore('QuizType', () => {
   async function fetchQuizTypes() {
@@ -21,5 +22,9 @@ export const useQuizTypeStore = defineStore('QuizType', () => {
     return data.isSuccess;
   }
 
-  return { fetchQuizTypes, addQuizType };
+  function getQuizTypeName(quizTypes: IQuizType[], id: string) {
+    return quizTypes.find((x) => x.id === id)?.name;
+  }
+
+  return { fetchQuizTypes, addQuizType, getQuizTypeName };
 });

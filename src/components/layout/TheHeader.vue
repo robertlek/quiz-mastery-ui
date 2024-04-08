@@ -24,9 +24,9 @@ const items = ref([
     link: '/'
   },
   {
-    label: 'Add Quiz',
+    label: 'Manage Quizzes',
     icon: 'pi pi-plus-circle',
-    link: '/about'
+    link: '/manage-quizzes'
   },
   {
     label: 'Quiz Types',
