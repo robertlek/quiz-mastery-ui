@@ -21,7 +21,7 @@
           </div>
         </Dialog>
       </div>
-      <Card v-for="quizType in quizTypes" :key="quizType.id" class="bg-primary-400 text-100 shadow-1 mb-4">
+      <Card v-for="quizType in quizTypeStore.getQuizTypes" :key="quizType.id" class="bg-primary-400 text-100 shadow-1 mb-4">
         <template #title>
           <span>{{ quizType.name }}</span>
         </template>
@@ -35,7 +35,6 @@
 <script setup lang="ts">
 import { reactive, onMounted, computed, ref } from 'vue';
 import { useQuizTypeStore } from '@/stores/QuizTypeStore';
-import type IQuizType from '@/interfaces/IQuizType';
 import { useToast } from 'primevue/usetoast';
 
 import Button from 'primevue/button';
@@ -46,33 +45,22 @@ import Message from 'primevue/message';
 import Toast from 'primevue/toast';
 
 const toast = useToast();
-const store = useQuizTypeStore();
-const quizTypes = reactive([] as IQuizType[]);
+const quizTypeStore = useQuizTypeStore();
 const quizTypeToAdd = reactive({ name: '' });
 const isAddDialogVisible = ref(false);
-const quizTypesAvailable = computed(() => quizTypes.length > 0);
+const quizTypesAvailable = computed(() => quizTypeStore.getQuizTypes.length > 0);
 
-onMounted(() => {
-  loadQuizTypes();
+onMounted(async () => {
+  await quizTypeStore.fetchQuizTypes();
 });
 
-const loadQuizTypes = async () => {
-  quizTypes.length = 0;
-
-  const quizTypesFetched: IQuizType[] = await store.fetchQuizTypes();
-
-  quizTypesFetched.forEach((x) => {
-    quizTypes.push(x);
-  });
-};
-
 const addQuizType = async () => {
-  const response = await store.addQuizType(quizTypeToAdd);
+  const response = await quizTypeStore.addQuizType(quizTypeToAdd);
 
   if (response) {
     isAddDialogVisible.value = false;
     toast.add({ severity: 'success', summary: 'Quiz Type added', detail: 'The quiz type has been added!', life: 3000 });
-    loadQuizTypes();
+    await quizTypeStore.fetchQuizTypes();
     quizTypeToAdd.name = '';
   }
 };
