@@ -1,13 +1,20 @@
 <template>
-  <div>
+  <section>
     <div v-if="!quizTypesAvailable">
       <Message severity="info" :closable="false">There are no quiz types.</Message>
     </div>
     <div v-else>
-      <div class="flex justify-content-between align-items-center mb-4">
-        <span>Manage the quiz types available in the application.</span>
-        <Button class="bg-primary-400" @click="isAddDialogVisible = true"><i class="pi pi-plus-circle"></i></Button>
+      <div class="flex justify-content-end">
+        <Button class="bg-gray-300 mr-2 border-0" @click="loadEntities">
+          <i class="pi pi-refresh mr-2"></i>
+          <span>Refresh</span>
+        </Button>
+        <Button class="bg-cyan-400 border-0" @click="isAddDialogVisible = true">
+          <i class="pi pi-plus mr-2"></i>
+          <span>Add Quiz Type</span>
+        </Button>
       </div>
+
       <div>
         <Dialog v-model:visible="isAddDialogVisible" modal header="Add Quiz Type" :style="{ width: '25rem' }">
           <span class="p-text-secondary block mb-5">Set a name for the new quiz type.</span>
@@ -21,15 +28,29 @@
           </div>
         </Dialog>
       </div>
-      <Card v-for="quizType in quizTypeStore.getQuizTypes" :key="quizType.id" class="bg-primary-400 text-100 shadow-1 mb-4">
-        <template #title>
-          <span>{{ quizType.name }}</span>
-        </template>
-      </Card>
+
+      <DataTable :value="quizTypeStore.getQuizTypes" class="mt-4" :rows="10" :paginator="true" :loading="entitiesLoading">
+        <Column field="id" header="Id"></Column>
+        <Column field="name" header="Quiz Type Name"></Column>
+        <Column header="Actions">
+          <template #body>
+            <div>
+              <Button size="small" class="bg-cyan-400 border-0 mx-1">
+                <i class="pi pi-pencil mr-2"></i>
+                <span>Edit</span>
+              </Button>
+              <Button size="small" class="bg-cyan-400 border-0 mx-1">
+                <i class="pi pi-trash mr-2"></i>
+                <span>Delete</span>
+              </Button>
+            </div>
+          </template>
+        </Column>
+      </DataTable>
     </div>
 
     <Toast />
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -38,7 +59,8 @@ import { useQuizTypeStore } from '@/stores/QuizTypeStore';
 import { useToast } from 'primevue/usetoast';
 
 import Button from 'primevue/button';
-import Card from 'primevue/card';
+import Column from 'primevue/column';
+import DataTable from 'primevue/datatable';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
@@ -47,12 +69,19 @@ import Toast from 'primevue/toast';
 const toast = useToast();
 const quizTypeStore = useQuizTypeStore();
 const quizTypeToAdd = reactive({ name: '' });
+const entitiesLoading = ref(false);
 const isAddDialogVisible = ref(false);
 const quizTypesAvailable = computed(() => quizTypeStore.getQuizTypes.length > 0);
 
-onMounted(async () => {
-  await quizTypeStore.fetchQuizTypes();
+onMounted(() => {
+  loadEntities();
 });
+
+const loadEntities = async () => {
+  entitiesLoading.value = true;
+  await quizTypeStore.fetchQuizTypes();
+  entitiesLoading.value = false;
+};
 
 const addQuizType = async () => {
   const response = await quizTypeStore.addQuizType(quizTypeToAdd);
