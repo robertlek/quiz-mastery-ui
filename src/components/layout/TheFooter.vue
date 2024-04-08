@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-primary-400 flex flex-column justify-content-center align-items-center p-2 border-1 border-primary-900">
+  <div class="bg-cyan-600 flex flex-column justify-content-center align-items-center p-2">
     <div class="text-100">Quiz Mastery - 2024 &copy;</div>
-    <div class="flex align-items-center">
+    <div class="flex align-items-center bg-white p-1 border-round mt-1">
       <a href="https://github.com/robertlek" target="_blank" class="cursor-pointer">
         <img src="/src/assets/icons/github.png" alt="GitHub" height="24" />
       </a>

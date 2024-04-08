@@ -1,15 +1,19 @@
 <template>
-  <header class="bg-primary-400 flex p-2 border-1 border-primary-900">
-    <img src="/src/assets/icons/quiz-logo.png" alt="Logo" height="50" class="mr-3" />
+  <header class="bg-cyan-600 flex p-2">
+    <span id="header-logo" class="mr-5">
+      <RouterLink to="/">
+        <img src="/src/assets/icons/quiz-logo.png" alt="Logo" height="50" />
+      </RouterLink>
+    </span>
 
-    <RouterLink v-for="item in items" :to="item.link" :key="item.label" class="flex align-items-center mr-3 no-underline text-100">
+    <RouterLink v-for="item in items" :to="item.link" :key="item.label" class="header-link flex align-items-center no-underline text-100">
       <span :class="item.icon" class="mr-2" />
       <span>{{ item.label }}</span>
     </RouterLink>
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
