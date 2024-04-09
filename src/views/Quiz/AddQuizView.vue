@@ -32,7 +32,7 @@
             </div>
             <div class="mt-5 w-full">
               <label for="description" class="font-bold block mb-1">Description</label>
-              <Textarea v-moedl="quizToAdd.description" id="description" rows="5" class="w-full"></Textarea>
+              <Textarea v-model="quizToAdd.description" id="description" rows="5" class="w-full"></Textarea>
             </div>
           </div>
         </div>
@@ -43,11 +43,26 @@
     </StepperPanel>
     <StepperPanel header="Questions">
       <template #content="{ prevCallback, nextCallback }">
-        <div class="flex flex-column h-12rem">
-          <div
-            class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium"
-          >
-            Content II
+        <div class="flex flex-column">
+          <div class="border-2 border-dashed surface-border border-round surface-ground font-medium p-5">
+            <div class="grid w-full flex align-items-end mb-5">
+              <div class="col-9">
+                <label for="question-message" class="font-bold block mb-1">Question</label>
+                <InputText v-model="nextQuestion.message" id="question-message" placeholder="Question" class="w-full"></InputText>
+              </div>
+              <div class="col-2">
+                <label for="question-score" class="font-bold block mb-1">Score (Max Score = {{ quizToAdd.maxScore }})</label>
+                <InputNumber v-model="nextQuestion.score" id="question-score" class="w-full"></InputNumber>
+              </div>
+              <div class="col-1">
+                <Button label="Add" class="w-full bg-cyan-400 border-0" @click="addQuestionInTheQueue"></Button>
+              </div>
+            </div>
+
+            <Fieldset v-for="(question, index) in questions" :key="index" :legend="question.score + ' points'" class="mb-3">
+              <template #legend> </template>
+              <p>{{ question.message }}</p>
+            </Fieldset>
           </div>
         </div>
         <div class="flex pt-4 justify-content-between">
@@ -58,11 +73,36 @@
     </StepperPanel>
     <StepperPanel header="Answers">
       <template #content="{ prevCallback }">
-        <div class="flex flex-column h-12rem">
-          <div
-            class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium"
-          >
-            Content III
+        <div class="flex flex-column">
+          <div class="border-2 border-dashed surface-border border-round surface-ground font-medium p-5">
+            <div v-for="(question, index) in questions" :key="index" class="mb-5">
+              <Fieldset class="mb-4">
+                <template #legend>
+                  <span class="text-cyan-500">
+                    <span class="pi pi-question-circle"></span>
+                    Question
+                  </span>
+                </template>
+                <p>{{ question.message }}</p>
+              </Fieldset>
+
+              <div class="flex align-items-center w-full">
+                <InputText placeholder="Answer" class="col-7"></InputText>
+                <div class="flex justify-content-center col-2">
+                  <Checkbox :binary="true" :id="`is-answer-correct-${index}`"></Checkbox>
+                  <label :for="`is-answer-correct-${index}`" class="ml-2">Is Correct Answer</label>
+                </div>
+                <div class="flex justify-content-center col-2">
+                  <Checkbox :binary="true" :id="`is-answer-image-${index}`"></Checkbox>
+                  <label :for="`is-answer-image-${index}`" class="ml-2">Is Image</label>
+                </div>
+                <div class="col-1">
+                  <Button label="Add" class="w-full bg-cyan-400 border-0"></Button>
+                </div>
+              </div>
+
+              <Divider class="mt-5" />
+            </div>
           </div>
         </div>
         <div class="flex pt-4 justify-content-between">
@@ -79,7 +119,10 @@ import { onMounted, reactive } from 'vue';
 import { useQuizTypeStore } from '@/stores/QuizTypeStore';
 
 import Button from 'primevue/button';
+import Checkbox from 'primevue/checkbox';
+import Divider from 'primevue/divider';
 import Dropdown from 'primevue/dropdown';
+import Fieldset from 'primevue/fieldset';
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import Stepper from 'primevue/stepper';
@@ -96,11 +139,30 @@ const quizToAdd = reactive({
   description: '' as string
 });
 
+const questions = reactive([] as { message: string; score: number; answers: [] }[]);
+const nextQuestion = reactive({
+  message: '' as string,
+  score: 0 as number,
+  answers: []
+});
+
 onMounted(() => {
   loadQuizTypes();
 });
 
 const loadQuizTypes = async () => {
   await quizTypeStore.fetchQuizTypes();
+};
+
+const addQuestionInTheQueue = () => {
+  questions.push({
+    message: nextQuestion.message,
+    score: nextQuestion.score,
+    answers: []
+  });
+
+  nextQuestion.message = '';
+  nextQuestion.score = 0;
+  nextQuestion.answers = [];
 };
 </script>
