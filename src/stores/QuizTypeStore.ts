@@ -32,6 +32,9 @@ export const useQuizTypeStore = defineStore('QuizTypeStore', {
   getters: {
     getQuizTypes(): IQuizType[] {
       return this.quizTypes;
+    },
+    getAllQuizTypesNames(): string[] {
+      return this.quizTypes.map((x) => x.name);
     }
   }
 });

@@ -5,10 +5,12 @@
         <i class="pi pi-refresh mr-2"></i>
         <span>Refresh</span>
       </Button>
-      <Button class="bg-cyan-400 border-0">
-        <i class="pi pi-plus mr-2"></i>
-        <span>Add Quiz</span>
-      </Button>
+      <RouterLink to="/add-quiz">
+        <Button class="bg-cyan-400 border-0">
+          <i class="pi pi-plus mr-2"></i>
+          <span>Add Quiz</span>
+        </Button>
+      </RouterLink>
     </div>
     <DataTable :value="quizzes" class="mt-4" :rows="10" :paginator="true" :loading="entitiesLoading">
       <Column field="quizType" header="Quiz Type"></Column>
@@ -42,6 +44,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useQuizStore } from '@/stores/QuizStore';
 import { useQuizTypeStore } from '@/stores/QuizTypeStore';
+import { RouterLink } from 'vue-router';
 
 import Badge from 'primevue/badge';
 import Button from 'primevue/button';
