@@ -75,34 +75,12 @@
       <template #content="{ prevCallback }">
         <div class="flex flex-column">
           <div class="border-2 border-dashed surface-border border-round surface-ground font-medium p-5">
-            <div v-for="(question, index) in questions" :key="index" class="mb-5">
-              <Fieldset class="mb-4">
-                <template #legend>
-                  <span class="text-cyan-500">
-                    <span class="pi pi-question-circle"></span>
-                    Question
-                  </span>
-                </template>
-                <p>{{ question.message }}</p>
-              </Fieldset>
-
-              <div class="flex align-items-center w-full">
-                <InputText placeholder="Answer" class="col-7"></InputText>
-                <div class="flex justify-content-center col-2">
-                  <Checkbox :binary="true" :id="`is-answer-correct-${index}`"></Checkbox>
-                  <label :for="`is-answer-correct-${index}`" class="ml-2">Is Correct Answer</label>
-                </div>
-                <div class="flex justify-content-center col-2">
-                  <Checkbox :binary="true" :id="`is-answer-image-${index}`"></Checkbox>
-                  <label :for="`is-answer-image-${index}`" class="ml-2">Is Image</label>
-                </div>
-                <div class="col-1">
-                  <Button label="Add" class="w-full bg-cyan-400 border-0"></Button>
-                </div>
-              </div>
-
-              <Divider class="mt-5" />
-            </div>
+            <AddAnswer
+              v-for="(question, index) in questions"
+              :key="index"
+              :question-message="question.message"
+              @attach-answers="(answers) => (question.answers = answers)"
+            ></AddAnswer>
           </div>
         </div>
         <div class="flex pt-4 justify-content-between">
@@ -117,10 +95,9 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 import { useQuizTypeStore } from '@/stores/QuizTypeStore';
+import AddAnswer from '@/components/quiz/AddAnswer.vue';
 
 import Button from 'primevue/button';
-import Checkbox from 'primevue/checkbox';
-import Divider from 'primevue/divider';
 import Dropdown from 'primevue/dropdown';
 import Fieldset from 'primevue/fieldset';
 import InputNumber from 'primevue/inputnumber';
