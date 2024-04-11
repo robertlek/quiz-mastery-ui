@@ -85,7 +85,8 @@
         </div>
         <div class="flex pt-4 justify-content-between">
           <Button label="Back" severity="secondary" icon="pi pi-arrow-left mr-2" @click="prevCallback" />
-          <Button label="Finish" icon="pi pi-check-circle mr-2" />
+          <Button label="Finish" icon="pi pi-check-circle mr-2" @click="confirmQuiz" />
+          <ConfirmDialog />
         </div>
       </template>
     </StepperPanel>
@@ -95,9 +96,16 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 import { useQuizTypeStore } from '@/stores/QuizTypeStore';
+import { useQuizStore } from '@/stores/QuizStore';
+import { useQuestionStore } from '@/stores/QuestionStore';
+import { useAnswerStore } from '@/stores/AnswerStore';
+import { useConfirm } from 'primevue/useconfirm';
+import { useRouter } from 'vue-router';
+
 import AddAnswer from '@/components/quiz/AddAnswer.vue';
 
 import Button from 'primevue/button';
+import ConfirmDialog from 'primevue/confirmdialog';
 import Dropdown from 'primevue/dropdown';
 import Fieldset from 'primevue/fieldset';
 import InputNumber from 'primevue/inputnumber';
@@ -107,6 +115,11 @@ import StepperPanel from 'primevue/stepperpanel';
 import Textarea from 'primevue/textarea';
 
 const quizTypeStore = useQuizTypeStore();
+const quizStore = useQuizStore();
+const questionStore = useQuestionStore();
+const answerStore = useAnswerStore();
+const confirm = useConfirm();
+const router = useRouter();
 
 const quizToAdd = reactive({
   quizType: '' as string,
@@ -116,11 +129,11 @@ const quizToAdd = reactive({
   description: '' as string
 });
 
-const questions = reactive([] as { message: string; score: number; answers: [] }[]);
+const questions = reactive([] as { message: string; score: number; answers: { message: string; isCorrect: boolean; isImage: boolean }[] }[]);
 const nextQuestion = reactive({
   message: '' as string,
   score: 0 as number,
-  answers: []
+  answers: [] as { message: string; isCorrect: boolean; isImage: boolean }[]
 });
 
 onMounted(() => {
@@ -141,5 +154,48 @@ const addQuestionInTheQueue = () => {
   nextQuestion.message = '';
   nextQuestion.score = 0;
   nextQuestion.answers = [];
+};
+
+const confirmQuiz = () => {
+  confirm.require({
+    message: 'Are you sure you want to create this quiz?',
+    header: 'Submit Quiz',
+    icon: 'pi pi-exclamation-circle',
+    rejectClass: 'p-button-secondary p-button-outlined',
+    rejectLabel: 'Cancel',
+    acceptLabel: 'Create',
+    accept: () => {
+      submitQuiz();
+    }
+  });
+};
+
+const submitQuiz = async () => {
+  const quizId = await quizStore.addQuiz({
+    quizTypeId: quizTypeStore.getQuizTypeIdByName(quizToAdd.quizType),
+    name: quizToAdd.name,
+    maxScore: quizToAdd.maxScore,
+    imageUrl: quizToAdd.imageUrl,
+    description: quizToAdd.description
+  });
+
+  questions.forEach(async (question) => {
+    const questionId = await questionStore.addQuestion({
+      quizId,
+      message: question.message,
+      score: question.score
+    });
+
+    question.answers.forEach((answer) => {
+      answerStore.addAnswer({
+        questionId,
+        message: answer.message,
+        isCorrect: answer.isCorrect,
+        isImage: answer.isImage
+      });
+    });
+  });
+
+  router.push('/manage-quizzes');
 };
 </script>

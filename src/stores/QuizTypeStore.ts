@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type IQuizType from '@/interfaces/IQuizType';
+import { OperationCanceledException } from 'typescript';
 
 export const useQuizTypeStore = defineStore('QuizTypeStore', {
   state: () => {
@@ -27,6 +28,14 @@ export const useQuizTypeStore = defineStore('QuizTypeStore', {
     },
     getQuizTypeName(id: string) {
       return this.quizTypes.find((x) => x.id === id)?.name;
+    },
+    getQuizTypeIdByName(name: string) {
+      const quizType = this.quizTypes.find((x) => x.name === name);
+
+      if (quizType === undefined) {
+        throw new OperationCanceledException();
+      }
+      return quizType.id;
     }
   },
   getters: {
