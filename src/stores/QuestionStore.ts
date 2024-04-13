@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia';
+import { useAnswerStore } from './AnswerStore';
+
+const answerStore = useAnswerStore();
 
 export const useQuestionStore = defineStore('QuestionStore', {
   actions: {
@@ -18,13 +21,14 @@ export const useQuestionStore = defineStore('QuestionStore', {
       const data = await response.json();
       return data.result;
     },
-    updateQuestion(question: { id: string; quizId: string; message: string; score: number }) {
-      fetch(`https://localhost:44351/api/Question/UpdateQuestion/${question.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(question)
+    async removeQuestionsFromQuiz(quizId: string) {
+      const questions: { id: string; quizId: string; message: string; score: number }[] = await this.getQuestionsFromQuiz(quizId);
+
+      questions.forEach(async (question) => {
+        await answerStore.removeAnswersFromQuestion(question.id);
+        fetch(`https://localhost:44351/api/Question/RemoveQuestion/${question.id}`, {
+          method: 'DELETE'
+        });
       });
     }
   }

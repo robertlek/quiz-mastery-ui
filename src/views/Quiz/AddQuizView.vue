@@ -63,10 +63,16 @@
               <template #legend> </template>
               <div class="flex justify-content-between">
                 <p>{{ question.message }}</p>
-                <Button severity="secondary" outlined @click="editQuestion(index)">
-                  <i class="pi pi-pencil mr-2"></i>
-                  <span>Edit</span>
-                </Button>
+                <div>
+                  <Button severity="secondary" class="mr-2" outlined @click="editQuestion(index)">
+                    <i class="pi pi-pencil mr-2"></i>
+                    <span>Edit</span>
+                  </Button>
+                  <Button severity="secondary" outlined @click="removeQuestion(index)">
+                    <i class="pi pi-trash mr-2"></i>
+                    <span>Remove</span>
+                  </Button>
+                </div>
               </div>
             </Fieldset>
           </div>
@@ -223,5 +229,9 @@ const editQuestion = (index: number) => {
 
   nextQuestion.message = question.message;
   nextQuestion.score = question.score;
+};
+
+const removeQuestion = (index: number) => {
+  questions.splice(index, 1);
 };
 </script>
