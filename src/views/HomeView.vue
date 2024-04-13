@@ -47,7 +47,7 @@
       </div>
 
       <template #footer>
-        <Button label="Close" outlined severity="secondary" style="min-width: 25rem" @click="previewQuizVisible = false" />
+        <Button label="Close" outlined severity="secondary" class="w-full" style="min-width: 25rem" @click="previewQuizVisible = false" />
       </template>
     </Dialog>
   </main>

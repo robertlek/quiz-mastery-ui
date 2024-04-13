@@ -88,7 +88,7 @@
             </div>
             <div class="flex pt-4 justify-content-between">
               <Button label="Back" severity="secondary" icon="pi pi-arrow-left mr-2" @click="prevCallback" />
-              <Button label="Finish" icon="pi pi-check-circle mr-2" @click="confirmQuiz" />
+              <Button label="Update" icon="pi pi-check-circle mr-2" @click="confirmQuiz" />
               <ConfirmDialog />
             </div>
           </template>
@@ -199,12 +199,12 @@ const addQuestionInTheQueue = () => {
 
 const confirmQuiz = () => {
   confirm.require({
-    message: 'Are you sure you want to create this quiz?',
-    header: 'Submit Quiz',
+    message: 'Are you sure you want to update this quiz?',
+    header: 'Update Quiz',
     icon: 'pi pi-exclamation-circle',
     rejectClass: 'p-button-secondary p-button-outlined',
     rejectLabel: 'Cancel',
-    acceptLabel: 'Create',
+    acceptLabel: 'Update',
     accept: () => {
       submitQuiz();
     }
