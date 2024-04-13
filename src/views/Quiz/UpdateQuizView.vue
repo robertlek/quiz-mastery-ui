@@ -57,13 +57,19 @@
                     <InputNumber v-model="nextQuestion.score" id="question-score" class="w-full"></InputNumber>
                   </div>
                   <div class="col-1">
-                    <Button label="Add" class="w-full bg-cyan-400 border-0" @click="addQuestionInTheQueue"></Button>
+                    <Button :label="!questionEditing ? 'Add' : 'Edit'" class="w-full bg-cyan-400 border-0" @click="addQuestionInTheQueue"></Button>
                   </div>
                 </div>
 
                 <Fieldset v-for="(question, index) in questions" :key="index" :legend="question.score + ' points'" class="mb-3">
                   <template #legend> </template>
-                  <p>{{ question.message }}</p>
+                  <div class="flex justify-content-between">
+                    <p>{{ question.message }}</p>
+                    <Button severity="secondary" outlined @click="editQuestion(index)">
+                      <i class="pi pi-pencil mr-2"></i>
+                      <span>Edit</span>
+                    </Button>
+                  </div>
                 </Fieldset>
               </div>
             </div>
@@ -130,6 +136,8 @@ const answerStore = useAnswerStore();
 const confirm = useConfirm();
 const isQuizValid = ref(false);
 const targetQuiz = ref();
+const questionEditing = ref(false);
+const questionBeingEdited = ref();
 
 const quizToUpdate = reactive({
   quizType: '' as string,
@@ -186,11 +194,19 @@ const loadQuestionsWithAnswers = async () => {
 };
 
 const addQuestionInTheQueue = () => {
-  questions.push({
-    message: nextQuestion.message,
-    score: nextQuestion.score,
-    answers: []
-  });
+  if (!questionEditing.value) {
+    questions.push({
+      message: nextQuestion.message,
+      score: nextQuestion.score,
+      answers: []
+    });
+  } else {
+    questions[questionBeingEdited.value].message = nextQuestion.message;
+    questions[questionBeingEdited.value].score = nextQuestion.score;
+
+    questionEditing.value = false;
+    questionBeingEdited.value = undefined;
+  }
 
   nextQuestion.message = '';
   nextQuestion.score = 0;
@@ -254,5 +270,15 @@ const submitQuiz = async () => {
   });
 
   router.push('/manage-quizzes');
+};
+
+const editQuestion = (index: number) => {
+  questionEditing.value = true;
+  questionBeingEdited.value = index;
+
+  const question = questions[index];
+
+  nextQuestion.message = question.message;
+  nextQuestion.score = question.score;
 };
 </script>
