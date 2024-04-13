@@ -51,6 +51,11 @@ export const useQuizStore = defineStore('QuizStore', {
     async getQuizComponentsTree(id: string) {
       const response = await fetch(`https://localhost:44351/api/Quiz/GetQuizComponentsTree/${id}`);
       return (await response.json()).result;
+    },
+    async deleteQuiz(id: string) {
+      await fetch(`https://localhost:44351/api/Quiz/RemoveQuiz/${id}`, {
+        method: 'DELETE'
+      });
     }
   },
   getters: {

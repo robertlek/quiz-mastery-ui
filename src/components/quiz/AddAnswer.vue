@@ -95,5 +95,7 @@ const attachAnswerToQuestion = () => {
 
 const removeAnswer = (index: number) => {
   answers.splice(index, 1);
+
+  emit('attachAnswers', answers);
 };
 </script>

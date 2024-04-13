@@ -252,8 +252,6 @@ const submitQuiz = async () => {
       score: question.score
     });
 
-    await answerStore.removeAnswersFromQuestion(questionId);
-
     question.answers.forEach((answer) => {
       answerStore.addAnswer({
         questionId,

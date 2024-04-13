@@ -38,7 +38,7 @@
                 <span>Update</span>
               </Button>
             </RouterLink>
-            <Button size="small" class="bg-cyan-400 border-0 mx-1">
+            <Button size="small" class="bg-cyan-400 border-0 mx-1" @click="confirmDeleteQuiz(slotProps.data.id)">
               <i class="pi pi-trash mr-2"></i>
               <span>Delete</span>
             </Button>
@@ -46,6 +46,8 @@
         </template>
       </Column>
     </DataTable>
+
+    <ConfirmDialog />
   </section>
 </template>
 
@@ -54,10 +56,12 @@ import { ref, computed, onMounted } from 'vue';
 import { useQuizStore } from '@/stores/QuizStore';
 import { useQuizTypeStore } from '@/stores/QuizTypeStore';
 import { RouterLink } from 'vue-router';
+import { useConfirm } from 'primevue/useconfirm';
 
 import Badge from 'primevue/badge';
 import Button from 'primevue/button';
 import Column from 'primevue/column';
+import ConfirmDialog from 'primevue/confirmdialog';
 import DataTable from 'primevue/datatable';
 import InputGroup from 'primevue/inputgroup';
 import InputText from 'primevue/inputtext';
@@ -77,6 +81,7 @@ const quizzes = computed(() => {
     };
   });
 });
+const confirm = useConfirm();
 
 onMounted(() => {
   loadEntities();
@@ -87,5 +92,25 @@ const loadEntities = async () => {
   await quizStore.fetchQuizzes();
   await quizTypeStore.fetchQuizTypes();
   entitiesLoading.value = false;
+};
+
+const confirmDeleteQuiz = (id: string) => {
+  confirm.require({
+    message: 'All questions and answers of the quiz will be removed as well.',
+    header: 'Are you sure you want to delete this quiz?',
+    icon: 'pi pi-info-circle',
+    rejectLabel: 'Cancel',
+    acceptLabel: 'Delete',
+    rejectClass: 'p-button-secondary p-button-outlined',
+    acceptClass: 'p-button-danger',
+    accept: () => {
+      deleteQuiz(id);
+    }
+  });
+};
+
+const deleteQuiz = async (id: string) => {
+  await quizStore.deleteQuiz(id);
+  await loadEntities();
 };
 </script>
