@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type IQuiz from '@/interfaces/IQuiz';
+import { OperationCanceledException } from 'typescript';
 
 export const useQuizStore = defineStore('QuizStore', {
   state: () => {
@@ -23,6 +24,19 @@ export const useQuizStore = defineStore('QuizStore', {
       });
       const data = await response.json();
       return data.result.id;
+    },
+    getQuizById(id: string) {
+      const quiz = this.quizzes.find((x) => x.id === id);
+
+      if (quiz === undefined) {
+        throw new OperationCanceledException();
+      }
+
+      return quiz;
+    },
+    async getQuizComponentsTree(id: string) {
+      const response = await fetch(`https://localhost:44351/api/Quiz/GetQuizComponentsTree/${id}`);
+      return (await response.json()).result;
     }
   },
   getters: {

@@ -11,7 +11,7 @@
         </p>
       </div>
       <div class="quiz-card-footer flex flex-column justify-content-center align-items-center">
-        <Button label="Preview" severity="secondary" outlined class="mt-2 w-11" />
+        <Button label="Preview" severity="secondary" outlined class="w-11" @click="previewQuiz" />
         <Button label="Start Quiz" class="w-11 mt-2 mb-2" />
       </div>
     </div>
@@ -21,11 +21,18 @@
 <script setup lang="ts">
 import Button from 'primevue/button';
 
-defineProps({
+const props = defineProps({
+  id: String,
   name: String,
   description: String,
   image: String
 });
+
+const emit = defineEmits(['previewQuiz']);
+
+const previewQuiz = () => {
+  emit('previewQuiz', props.id);
+};
 </script>
 
 <style scoped>
