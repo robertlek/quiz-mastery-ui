@@ -16,13 +16,14 @@ export const useAnswerStore = defineStore('AnswerStore', {
       const data = await response.json();
       return data.result;
     },
-    updateAnswer(answer: { id: string; questionId: string; message: string; isCorrect: boolean; isImage: boolean }) {
-      fetch(`https://localhost:44351/api/Answer/UpdateAnswer/${answer.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(answer)
+    async removeAnswersFromQuestion(questionId: string) {
+      const answers: { id: string; questionId: string; message: string; isCorrect: boolean; isImage: boolean }[] =
+        await this.getAnswersFromQuestion(questionId);
+
+      answers.forEach((answer) => {
+        fetch(`https://localhost:44351/api/Answer/RemoveAnswer/${answer.id}`, {
+          method: 'DELETE'
+        });
       });
     }
   }

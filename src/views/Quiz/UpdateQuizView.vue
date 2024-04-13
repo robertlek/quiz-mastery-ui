@@ -241,23 +241,15 @@ const submitQuiz = async () => {
       questionId = question.id;
     }
 
+    await answerStore.removeAnswersFromQuestion(questionId);
+
     question.answers.forEach((answer) => {
-      if (answer.id === undefined) {
-        answerStore.addAnswer({
-          questionId,
-          message: answer.message,
-          isCorrect: answer.isCorrect,
-          isImage: answer.isImage
-        });
-      } else {
-        answerStore.updateAnswer({
-          id: answer.id,
-          questionId,
-          message: answer.message,
-          isCorrect: answer.isCorrect,
-          isImage: answer.isImage
-        });
-      }
+      answerStore.addAnswer({
+        questionId,
+        message: answer.message,
+        isCorrect: answer.isCorrect,
+        isImage: answer.isImage
+      });
     });
   });
 

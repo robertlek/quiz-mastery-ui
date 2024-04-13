@@ -13,6 +13,7 @@
     <InputGroup v-for="(answer, index) in answers" :key="index" class="mb-1">
       <Button :icon="answer.isCorrect ? `pi pi-check` : `pi pi-times`" :severity="answer.isCorrect ? `success` : `danger`" />
       <InputText :value="answer.message" disabled />
+      <Button icon="pi pi-trash" class="bg-red-400 border-none" @click="removeAnswer(index)"></Button>
     </InputGroup>
 
     <div v-if="!answersLimitReached" class="flex align-items-center w-full mt-4">
@@ -90,5 +91,9 @@ const attachAnswerToQuestion = () => {
   emit('attachAnswers', answers);
 
   resetAnswer();
+};
+
+const removeAnswer = (index: number) => {
+  answers.splice(index, 1);
 };
 </script>
