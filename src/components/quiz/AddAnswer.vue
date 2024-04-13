@@ -33,22 +33,24 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from 'vue';
+import { reactive, computed, onMounted } from 'vue';
 
 import Button from 'primevue/button';
 import Checkbox from 'primevue/checkbox';
 import Fieldset from 'primevue/fieldset';
 import InputGroup from 'primevue/inputgroup';
 import InputText from 'primevue/inputtext';
+import type IAnswer from '@/interfaces/IAnswer';
 
-defineProps({
+const props = defineProps({
   questionMessage: String,
-  questionIndex: Number
+  questionIndex: Number,
+  questionAnswers: Object
 });
 
 const emit = defineEmits(['attachAnswers']);
 
-const answers = reactive([] as { message: string; isCorrect: boolean; isImage: boolean }[]);
+const answers = reactive([] as { id?: string; message: string; isCorrect: boolean; isImage: boolean }[]);
 const nextAnswer = reactive({
   message: '' as string,
   isCorrect: false as boolean,
@@ -57,6 +59,19 @@ const nextAnswer = reactive({
 
 const answersLimitReached = computed(() => {
   return answers.length >= 4;
+});
+
+onMounted(() => {
+  if (props.questionAnswers !== undefined) {
+    props.questionAnswers.forEach((answer: IAnswer) => {
+      answers.push({
+        id: answer.id,
+        message: answer.message,
+        isCorrect: answer.isCorrect,
+        isImage: answer.isImage
+      });
+    });
+  }
 });
 
 const resetAnswer = () => {

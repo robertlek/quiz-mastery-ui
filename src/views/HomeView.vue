@@ -1,6 +1,6 @@
 <template>
   <main>
-    <section class="flex justify-content-between mx-3">
+    <section class="flex justify-content-between">
       <InputGroup class="w-10">
         <InputText placeholder="Search Quiz" />
         <Button icon="pi pi-search" class="bg-cyan-400 border-none" />
@@ -12,7 +12,7 @@
       </Button>
     </section>
 
-    <section class="mx-3 mt-3">
+    <section class="mt-3">
       <Badge v-for="quizType in quizTypeStore.getQuizTypes" :key="quizType.id" severity="secondary" class="cursor-pointer mr-2">
         {{ quizType.name }}
       </Badge>

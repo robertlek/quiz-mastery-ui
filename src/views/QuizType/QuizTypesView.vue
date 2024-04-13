@@ -4,15 +4,22 @@
       <Message severity="info" :closable="false">There are no quiz types.</Message>
     </div>
     <div v-else>
-      <div class="flex justify-content-end">
-        <Button class="bg-gray-300 mr-2 border-0" @click="loadEntities">
-          <i class="pi pi-refresh mr-2"></i>
-          <span>Refresh</span>
-        </Button>
-        <Button class="bg-cyan-400 border-0" @click="isAddDialogVisible = true">
-          <i class="pi pi-plus mr-2"></i>
-          <span>Add Quiz Type</span>
-        </Button>
+      <div class="flex justify-content-between">
+        <InputGroup class="w-10">
+          <InputText placeholder="Search Quiz Type" />
+          <Button icon="pi pi-search" class="bg-cyan-400 border-none" />
+        </InputGroup>
+
+        <div>
+          <Button class="bg-gray-300 mr-2 border-0" @click="loadEntities">
+            <i class="pi pi-refresh mr-2"></i>
+            <span>Refresh</span>
+          </Button>
+          <Button class="bg-cyan-400 border-0" @click="isAddDialogVisible = true">
+            <i class="pi pi-plus mr-2"></i>
+            <span>Add</span>
+          </Button>
+        </div>
       </div>
 
       <div>
@@ -29,15 +36,15 @@
         </Dialog>
       </div>
 
-      <DataTable :value="quizTypeStore.getQuizTypes" class="mt-4" :rows="10" :paginator="true" :loading="entitiesLoading">
-        <Column field="id" header="Id"></Column>
-        <Column field="name" header="Quiz Type Name"></Column>
-        <Column header="Actions">
+      <DataTable :value="quizTypeStore.getQuizTypes" class="mt-4" :rows="10" :paginator="true" :loading="entitiesLoading" sortfield="name">
+        <Column field="id" header="Id" sortable></Column>
+        <Column field="name" header="Quiz Type Name" sortable></Column>
+        <Column header="Actions" sortable>
           <template #body>
             <div>
               <Button size="small" class="bg-cyan-400 border-0 mx-1">
                 <i class="pi pi-pencil mr-2"></i>
-                <span>Edit</span>
+                <span>Update</span>
               </Button>
               <Button size="small" class="bg-cyan-400 border-0 mx-1">
                 <i class="pi pi-trash mr-2"></i>
@@ -62,6 +69,7 @@ import Button from 'primevue/button';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
 import Dialog from 'primevue/dialog';
+import InputGroup from 'primevue/inputgroup';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
 import Toast from 'primevue/toast';

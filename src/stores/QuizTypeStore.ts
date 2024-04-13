@@ -27,7 +27,13 @@ export const useQuizTypeStore = defineStore('QuizTypeStore', {
       return data.isSuccess;
     },
     getQuizTypeName(id: string) {
-      return this.quizTypes.find((x) => x.id === id)?.name;
+      const quizType = this.quizTypes.find((x) => x.id === id);
+
+      if (quizType === undefined) {
+        throw new OperationCanceledException();
+      }
+
+      return quizType.name;
     },
     getQuizTypeIdByName(name: string) {
       const quizType = this.quizTypes.find((x) => x.name === name);

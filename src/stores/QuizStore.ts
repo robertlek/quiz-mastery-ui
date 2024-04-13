@@ -14,6 +14,11 @@ export const useQuizStore = defineStore('QuizStore', {
       const data = await response.json();
       this.quizzes = data.result;
     },
+    async fetchQuiz(id: string) {
+      const response = await fetch(`https://localhost:44351/api/Quiz/GetQuiz/${id}`);
+      const data = await response.json();
+      return data.result;
+    },
     async addQuiz(quiz: { quizTypeId: string; name: string; maxScore: number; imageUrl: string; description: string }) {
       const response = await fetch('https://localhost:44351/api/Quiz/AddQuiz', {
         method: 'POST',
@@ -24,6 +29,15 @@ export const useQuizStore = defineStore('QuizStore', {
       });
       const data = await response.json();
       return data.result.id;
+    },
+    updateQuiz(quiz: { id: string; quizTypeId: string; name: string; maxScore: number; imageUrl: string; description: string }) {
+      fetch(`https://localhost:44351/api/Quiz/UpdateQuiz/${quiz.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(quiz)
+      });
     },
     getQuizById(id: string) {
       const quiz = this.quizzes.find((x) => x.id === id);

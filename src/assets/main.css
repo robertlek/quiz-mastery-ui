@@ -78,3 +78,7 @@ h6 {
   color: var(--cyan-600);
   margin-right: 10px;
 }
+
+.p-column-title {
+  margin-right: 10px;
+}
