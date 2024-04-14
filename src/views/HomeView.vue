@@ -28,6 +28,7 @@
         :image="quiz.image"
         class="col-12 sm:col-12 md:col-6 lg:col-4 xl:col-3 mb-5"
         @preview-quiz="(id) => previewQuiz(id)"
+        @start-quiz="(id) => $router.push(`/quiz/${id}`)"
       />
     </section>
 

@@ -12,7 +12,7 @@
       </div>
       <div class="quiz-card-footer flex flex-column justify-content-center align-items-center">
         <Button label="Preview" severity="secondary" outlined class="w-11" @click="previewQuiz" />
-        <Button label="Start Quiz" class="w-11 mt-2 mb-2" />
+        <Button label="Start Quiz" class="w-11 mt-2 mb-2" @click="startQuiz" />
       </div>
     </div>
   </div>
@@ -28,10 +28,14 @@ const props = defineProps({
   image: String
 });
 
-const emit = defineEmits(['previewQuiz']);
+const emit = defineEmits(['previewQuiz', 'startQuiz']);
 
 const previewQuiz = () => {
   emit('previewQuiz', props.id);
+};
+
+const startQuiz = () => {
+  emit('startQuiz', props.id);
 };
 </script>
 
